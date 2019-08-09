@@ -1,0 +1,54 @@
+action -- 想改变state则发起action(读取state)
+
+reducer -- 接受state, action并返回新的state(改变state)
+
+Store -- 保存数据的地方，你可以把它看成一个容器。整个应用只能有一个 Store。// 最好只有一个一个大store可以有小store
+包括: 
+1.getState -- 返回当前state树
+2.dispatch(action) -- 触发state变化的唯一途径
+(store.dispatch()是 View 发出 Action 的唯一方法。)
+3.subscribe(listerner) -- 添加一个监听器, dispatch执行时触发
+4.replaceReducer(nextReducer) 替换store 来计算reducer
+
+connect -- 把需要改变的state 通过mapStateToProps, mapDispatchToProps连接到组件上
+(mapStateToProps(state, ownProps) // 触发action, 且该state来源于reducers
+// 多个组件绑定到同一个mapStateToProps上, 则是使用同一个state
+// connect(mapStateToProps)(组件) -- mapStateToProps可以改成mapStateToPropsabc, 则是两个state
+
+class MyComp extends Component {
+  render(){
+    return <div>计数：{this.props.count}次</div> // this.props.count 可以是上述的state, 也可以是ownProps
+  }
+}
+
+const Comp = connect(...args)(MyComp);
+
+mapDispatchProps(dispatch, ownProps) = (dispatch) => { 
+  return {
+    changeText: (text) => {
+      dispatch(changeWord(text)) // changeWord来自action
+    }
+  } 
+} // 需要将dispatch函数封装一下, 不然会报错
+
+
+prop-type -- 规定参数的数据类型
+  optionalArray: React.PropTypes.array,
+  optionalBool: React.PropTypes.bool,
+  optionalFunc: React.PropTypes.func,
+  optionalNumber: React.PropTypes.number,
+  optionalObject: React.PropTypes.object,
+  optionalString: React.PropTypes.string,
+  optionalSymbol: React.PropTypes.symbol,
+
+
+{
+...state,
+action
+} // 将state, + action 存放到 props中, 通常由不同的reducers的组合返回一个组合的对象
+
+redux-saga // saga(put) -> actions -> reducers
+                 //  takeEvery(action.type, func) -- 监控所有action.type, 并执行func
+                 //   takeLatest与上方法一样, 但知执行最后一个请求
+
+
